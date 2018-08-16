@@ -1,0 +1,917 @@
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+%   Minhas notas
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+%   PREÂMBULO
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+\documentclass[final,1p,times,12pt]{elsarticle}
+\usepackage[latin1]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{amscd}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+%\setlength{\topmargin}{-0.2in}
+%\setlength{\oddsidemargin}{-0.2in}
+%\setlength{\textheight}{9in}
+%\setlength{\textwidth}{5.5in}
+
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{proposicao}{Proposição}[section]
+\newtheorem{corolario}{Corolário}[section]
+\newtheorem{lema}{Lema}[section]
+\newtheorem{exemplo}{Exemplo}[section]
+\newtheorem{definicao}{Definição}[section]
+\newtheorem{notacao}{Notação}[section]
+\newtheorem{problema}{Problema}[section]
+\newtheorem{resposta}{Resposta do Problema}[section]
+
+\journal{Combinatorial Theory}
+
+
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+%   CORPO DO TEXTO
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+\begin{document}
+
+
+\begin{frontmatter}
+
+% TÍTULO:
+\title{Notas de leitura em Teoria dos Grafos:\\Introdução a Grafos}
+
+% AUTORES:
+\author{Walner Mendonça dos Santos\corref{cor1}}
+\ead{walner@alu.ufc.br}
+\cortext[cor1]{Aluno de bacharelado em Matemática pela Universidade Federal do Ceará.}
+
+%\author{\\Fabrício Siqueira Benevides.\corref{cor2}}
+%\cortext[cor2]{Orientador.}
+
+% ENDEREÇOS:
+\address{Universidade Federal do Ceará}
+
+% RESUMO:
+\begin{abstract}
+    Minhas notas do livro Graph Theory, Diestel. As notações são as mesmas do Diestel.
+\end{abstract}
+
+% PALAVARAS-CHAVE
+\begin{keyword}
+    Teoria dos grafos.
+\end{keyword}
+
+\end{frontmatter}
+
+
+\section{O grau de um vértice}
+\begin{proposicao}
+    Para todo grafo $G=(V,E)$, temos:
+    \begin{equation}
+        \sum_{v\in V} d(v) = 2 |E|
+    \end{equation}
+\begin{proof} Contagem dupla dos pares $(v,e)\in V\times E$.
+\end{proof}
+\end{proposicao}
+
+\begin{proposicao}
+    O número de vértices de grau ímpar em um grafo é sempre par.
+\begin{proof} Um grafo sobre $V$ tem $\frac{1}{2}\sum_{v\in V} d(v)$ arestas, então $\sum d(v)$ é um número par.
+\end{proof}
+\end{proposicao}
+
+\begin{proposicao}
+    Todo grafo $G$ com pelo menos uma aresta tem um subgrafo $H$ com $\delta(H) > \epsilon(H) \geq \epsilon(G)$.
+\begin{proof} Vamos construir $H$ a partir de $G$ deletando vértices de grau pequeno um por um até restarem somente vértices de grau alto. Podemos deletar vértices $v$ de um grafo qualquer $G$ sem diminuir $\epsilon(G)$, desde que $d(v)\leq\epsilon(G)$. Assim, o número de vértices decai uma unidade e o número de arestas decai, no máximo, $\epsilon(G)$, de modo que a razão global $\epsilon(G)$ de arestas por vétices não irá diminuir.
+
+Formalmente, contruímos uma sequência $G = G_0 \supseteq G_1 \supseteq \ldots$ de subgrafos induzidos de $G$ como segue. Se $G_i$ tem um vértice $v_i$ de grau $d(v_i)\leq \epsilon(G_i)$, façamos $G_{i+1} :=G_i-v_i$; se não, terminamos nossa sequência e façamos $H:=G_i$. Pela a escolha de $v_i$, temos $\epsilon(G_{i+1})\geq\epsilon(G_i)$ para todo $i$, e portanto $\epsilon(H)\geq\epsilon(G)$.
+
+O que mais podemos dizer sobre o grafo $H$? Desde que $\epsilon(K^1) = 0 < \epsilon(G)$, nenhum dos grafos em nossa sequência é trivial, então, em particular, $H\neq \emptyset$. O fato de que $H$ não têm vértice adequado para ser deletado implica $\delta(H)>\epsilon(H)$, como afirmado.
+\end{proof}
+\end{proposicao}
+
+
+
+\section{Caminhos e Ciclos}
+
+\begin{definicao}[Caminho] Um \emph{caminho} é um grafo não-vazio $P=(V,E)$ da forma
+\begin{eqnarray}
+    V=\{x_0,x_1,\ldots,x_k \} & E = \{x_0x_1,x_1x_2,\ldots,x_{k-1}x_{k}\},
+\end{eqnarray}
+onde $x_i$ são todos distintos. O número de arestas de um caminho é o seu \emph{tamanho}, e o caminho de tamanho $k$ é denotado por $P^k$.
+\end{definicao}
+
+\begin{definicao}[Ciclo] Um \emph{ciclo} é um grafo não-vazio $C=(V,E)$ da forma
+\begin{eqnarray}
+    V=\{x_0,x_1,\ldots,x_k\} & E = \{x_0x_1,x_1x_2,\ldots,x_{k-1}x_{k},x_{k}x_0\},
+\end{eqnarray}
+onde $x_i$ são todos distintos. Equivalentemente, dado um caminho $P=x_0\ldots x_k$, um ciclo é um grafo $C:=P+x_kx_0$. O número de arestas de um ciclo é o seu \emph{tamanho}, e o ciclo de tamanho $k$ é denotado por $C^k$.
+\end{definicao}
+
+\begin{proposicao}
+    Todo grafo $G$ contém um passeio de tamanho $\delta(G)$ e um ciclo de tamanho pelo menos $\delta(G)+1$ (desde que $\delta(G)\geq2$).
+\begin{proof} Seja $x_0 \ldots x_k$ um caminho de maior comprimento em $G$. Então todos os vizinhos de $x_k$ estarão sobre o caminho (Figura \ref{fig_1_3_4}). Portanto $k \geq d(x_k) \geq \delta(G)$. Se $i<k$ é mínimo com $x_ix_k\in E(G)$, então $x_i \ldots x_k x_i$ é um ciclo de comprimento no mínimo $\delta(G)+1$.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=7cm]{figuras/fig_1_3_4}
+  \caption{Um caminho $x_0 \ldots x_k$ de maior comprimento e os vizinhos.}\label{fig_1_3_4}
+\end{figure}
+\end{proof}
+\end{proposicao}
+
+\begin{proposicao}
+    Todo grafo $G$ contém um ciclo satisfazendo $g(G)\leq 2\mathrm{diam}\;G+1$.
+\begin{proof} Seja $C$ um ciclo de menor comprimento em $G$. Se $g(G)\geq 2\mathrm{diam}\;G+2$, então $C$ tem dois vértices cuja a distância em $C$ é no mínimo $\mathrm{diam}\;G+1$. Em $G$, estes vértices tem uma distância menor; qualquer caminho $P$ mais curto entre eles não é portanto um subgrafo de $C$. Portanto, $P$ contém um $C-\mathrm{caminho}$ $xPy$. Juntamente com o mais curto dos dois caminhos $x-y$, este caminhos $xPy$ forma um ciclo menos do que $C$, uma contradição.
+\end{proof}
+\end{proposicao}
+
+\begin{proposicao}
+    Para todo grafo $G$, temos:
+    \begin{equation}
+        \mathrm{rad}\;G \leq \mathrm{diam}\;G \leq 2\mathrm{rad}\;G.
+    \end{equation}
+\begin{proof} Lembremos que
+    \begin{eqnarray}
+        \mathrm{rad}\;G := \min_{x\in V(G)} \max_{y\in V(G)} d_{G}(x,y)\\
+        \mathrm{diam}\;G := \max_{x\in V(G)} \max_{y\in V(G)} d_{G}(x,y).
+    \end{eqnarray}
+Logo, a primeira desigualdade é válida. Para provarmos a segunda desigualdade, seja $v\in V(G)$ um vértice central, i.e., um vértice tal que a maior distância para qualquer outro vértice é a menor possível. Esta distância é o \emph{raio} de $G$.
+
+Suponhamos que $\mathrm{diam}\;G>2\mathrm{rad}\;G$, para algum grafo $G$. Seja $P$ um caminho tal que $|P| = \mathrm{diam}\;G$. Seja $x$ e $y$ as extremidades de $P$. Seja $u$ um vértice qualquer em $P$. Seja $Q$ um caminho que ligue $u$ a $v$ (este caminho pode ser nulo). Olhemos para os caminhos $P_1:=xPuQv$ e $P_2:=yPuQv$. Pela definição de raio, $|P_1|\leq\mathrm{rad}\;G$ e $|P_2|\leq\mathrm{rad}\;G$, isso implica que $|P_1|+|P_2|\leq2\mathrm{rad}\;G$. Por outro lado, $|P_1|+|P_2|\geq|P|=\mathrm{diam}\;G$, pela forma da qual definimos $P_1$ e $P_2$, contrariando a hipótese de que $\mathrm{diam}\;G>2\mathrm{rad}\;G$. Logo, $\mathrm{diam}\;G\leq2\mathrm{rad}\;G$.
+\end{proof}
+\end{proposicao}
+
+\begin{proposicao}\label{pr1.3.3}
+    Um grafo $G$ de raio no máximo $k$ e grau máximo não maior que $d\geq3$ tem menos do que $\frac{d}{d-2}(d-1)^{k}$ vértices.
+\begin{proof} Seja $z$ um vértice central em $G$, e seja $D_i$ o conjunto de vértices $v$ de $G$ tal que $d(v,z)=i$. Então $V(G) = \bigcup_{i=0}^{k} D_i$. Claramente $|D_o| = 1$ e $|D_1|\leq d$. Para $i\geq1$, temos $|D_{i+1}|\leq(d-1)|D_{i}|$, porque qualquer vertice em $D_{i+1}$ é um vizinho de um vértice em $D_{i}$, e cada vértice em $D_{i}$ tem no máximo $d-1$ vizinhos em $D_{i+1}$ (uma vez que tem outro vizinho em $D_{i-1}$). Portanto $|D_{i+1}| \leq d(d-1)^{i}$, para todo $i<k$ pela indução, resultando
+\begin{equation*}
+    |G| \leq 1+d\sum_{i=0}^{k-1} (d-1)^{i} = 1+\frac{d}{d-2}((d-1)^{k}-1) < \frac{d}{d-2}(d-1)^{k}.
+\end{equation*}
+\end{proof}
+\end{proposicao}
+
+Para $d\in\mathbb{R}$ e $g\in\mathbb{N}$, seja
+\begin{equation}
+    n_{0}(d,g):=\left\{
+                  \begin{array}{ll}
+                    \displaystyle{1+d\sum_{i=0}^{r-1} (d-1)^{i}}, & \hbox{se $g=:2r+1$ é ímpar;} \\
+                    \displaystyle{2\sum_{i=0}^{r-1} (d-1)^{i}}, & \hbox{se $g=:2r$ é par.}
+                  \end{array}
+                \right.
+\end{equation}
+
+\begin{proposicao}
+    Seja $G$ um grafo e seja $\delta=\delta(G)$ e $g=g(G)$. Então $G$ tem pelo menos $n_0(\delta,g)$ vértices.
+\begin{proof} A demonstração seguirá o mesmo raciocíno da prova da Proposição \ref{pr1.3.3}. Vamos separar em dois casos: $g$ sendo ímpar e $g$ sendo par.
+
+($g:=2r+1$) Seja $x$ um vértice de $G$. Seja $D_i$ o conjunto dos vértices $v$ de $G$ tal que $d(v,x) = i$. Então $V(G) = \bigcup_{i=0}^{r-1} D_i$. Claramente $|D_0|=1$ e $|D_1| \geq d$. Para $i\geq1$, temos $|D_{i+1}| \geq (d-1) |D_{i}|$, pois qualquer vértice de $D_{i+1}$ é um vizinho de um vértice em $D_i$ e cada vértice de $D_i$ tem pelo menos $d-1$ vizinhos em $D_{i+1}$ (uma vez que tem outro vizinho em $D_{i-1}$). Portanto $|D_{i+1}|\geq d(d-1)^{i}$ para todo $i<r$ pela indução, resultando
+\begin{equation*}
+    |G| \geq 1 + d\sum_{i=0}^{r-1} (d-1)^{i} = 1 + d \frac{(d-1)^{r} -1}{d-2}
+\end{equation*}
+
+($g:=2r$) Seja $x$ e $y$ dois vértices adjacentes de $G$. Seja $D_i$ o conjunto dos vértices $v$ de $G$ tal que $\min(d(v,x),d(v,y)) = i$. Então $V(G) = \bigcup_{i=0}^{r-1} D_i$. Claramente $|D_0|=2$. Observe que $|D_1|\geq 2(d-1)$, pois $x$ possue pelo menos $d-1$ vizinhos diferentes de $y$ e este, por sua vez, possue pelo menos $d-1$ vizinhos diferentes de $x$ -- a menos que $g$ seja igual a 3, mas estamos assumindo $g$ par. Para $i\geq 1$, temos $|D_{i+1}|\geq(d-1)|D_{i}|$, pois qualquer vértice de $D_{i+1}$ é um vizinho de um vértice em $D_i$ e cada vértice de $D_i$ tem pelo menos $d-1$ vizinhos em $D_{i+1}$ (uma vez que tem outro vizinho em $D_{i-1}$). Portanto $D_{i}\geq2(d-1)^{i}$ para todo $i<r$ pela indução, resultando
+\begin{equation*}
+    |G| \geq 2\sum_{i=0}^{r-1} (d-1)^{i} = 2 \frac{(d-1)^{r} -1}{d-2}
+\end{equation*}
+\end{proof}
+\end{proposicao}
+
+\begin{teorema}[Alon, Hoory \& Linial 2002]
+    Seja $G$ um grafo. Se $d(G)\geq d \geq 2$ e $g(G)\geq g \in \mathbb{N}$, então $|G|\geq n_0 (d,g)$
+\end{teorema}
+
+\begin{corolario}
+    Se $\delta(G)\geq 3$, então $g(G)<2\log|G|$.
+\begin{proof} Se $g:=g(G)$ é par, então
+\begin{equation}
+    n_0(3,g)=2\frac{2^{q/2}-1}{2-1} = 2^{g/2}+(2^{g/2}-2)>2^{g/2},
+\end{equation}
+enquanto que, se $g$ é ímpar, então
+\begin{equation}
+    n_0(3,g)=1-3\frac{2^{(q-1)/2}-1}{2-1} = \frac{3}{\sqrt{2}}2^{g/2}-2>2^{g/2}.
+\end{equation}
+Como $|G|\geq n_0(3,g)$, o resultado segue.
+\end{proof}
+\end{corolario}
+
+\begin{teorema}
+    Seja $A = (a_{ij})_{n\times n}$ a matriz de adjacência de um grafo $G$. A matriz $A^{k}=(a_{ij}')_{n\times n}$ mostra, para todo $i,j\leq n$, o número $a_{ij}'$ de caminhos de tamaho $k$ de $v_i$ até $v_j$ em $G$.
+\end{teorema}
+
+\section{Conectividade}
+
+\begin{proposicao}\label{pr1.4.1}
+    Os vértices de um grafo conexo $G$ podem sempre ser enumerados, digamos $v_1, \ldots, v_n$, de tal forma que $G_i := G[v_1, \ldots,v_i]$ é conexo para todo $i$.
+\begin{proof} Pegue qualquer vértice $v_1$ e assuma indutivamente que $v_1,\ldots, v_k$ tem sido escolhido para algum $i<|G|$. Agora pegue um vértice $v\in G-G_i$. Como $G$ é conexo, ele contém um $v-v_1$ caminho $P$. Escolha como $v_{i+1}$ o último vértice de $P$ em $G-G_i$; então $v_{i+1}$ tem um vizinho em $G_i$. A conexidade de qualquer $G_i$ segue pela indução sobre $i$.
+\end{proof}
+\end{proposicao}
+
+
+\begin{definicao}[Conectividade]
+O menor número de vértices que se deve deletar para tornar um grafo $G$ desconexo é a \emph{conectividade} de $G$ e é denotado por $\kappa(G)$. O menor número de arestas que se deve deletar para torná-lo desconexo é a \emph{aresta-conectividade} de $G$ e é denotado por $\lambda(G)$.
+\end{definicao}
+
+\begin{exemplo}
+    $\kappa(K^n) = \lambda(K^n) = n-1$;\\
+    $\kappa(P^n) = \lambda(P^n) = 1$;\\
+    $\kappa(C^n) = \lambda(C^n) = 2$;\\
+    $\kappa(T) = \lambda(T) = 1$, onde $T$ é uma árvore qualquer.
+\end{exemplo}
+
+
+\begin{proposicao}
+    Se $G$ é não-trivial, então $\kappa(G)\leq\lambda(G)\leq\delta(G)$.
+\begin{proof} A segunda desigualdade segue do fato que todas as arestas incidentes com um vértice fixos separam-no de $G$. Para provar a primeira desigualdade, seja $F$ qualquer subconjunto minimal de $E$ tal que $G-F$ é desconexo. Mostremos que $\kappa(G)\leq |F|$.
+
+Suponha primeiro que $G$ tem um vértice $v$ que não é incidente com uma aresta de $F$. Seja $C$ a componente de $G-F$ contendo $v$. Então os vértices de $C$ que são incidentes com uma aresta em $F$ possue ambas a extremidades em $C$ (pela minimalidade de $F$), existe no máximo $|F|$ tais vértices, resultando $\kappa(G)\leq|F|$, como desejado.
+
+Suponha agora que todo vértice é incidente com um aresta em $F$. Seja $v$ qualquer vértice e seja $C$ a componente de $G-F$ contendo $v$. Então os vizinhos $w$ de $v$ com $vw\notin F$ residem em $C$ e são incidentes com arestas disitintas em $F$, resultando $d_{G}(v)\leq|F|$. Como $N_{G}(v)$ separa $v$ de todos os outros vértices em $G$, isto resulta em $\kappa(G)\leq|F|$ -- a menos que não exista outros vértices, i.e., a menos que $\{v\}\bigcup N(v)=V$. Mas $v$ foi escolhido com um vértice arbitrário. Então podemos assumir que $G$ é completo, resultando em $\kappa(G)=\lambda(G)=|G|-1$.
+\end{proof}
+\end{proposicao}
+
+\begin{teorema}[Mader 1972]
+    Seja $0\neq k \in \mathbb{N}$. Todo grafo $G$ com $d(G)\geq 4k$ tem um subgrafo $(k+1)$-conexo $H$ tal que $\epsilon(H) > \epsilon(G)-k$.
+\begin{proof} Seja $\gamma:=\epsilon(G)$ $(\geq 2k)$, e considere o subgrafo $G' \subseteq G$ tal que
+\begin{equation}\label{eq1.4.3}
+    |G'| \geq 2k \quad \text{ e }\quad \|G'\| \geq \gamma(|G'|-k).
+\end{equation}
+Tal grafo $G'$ existe, uma vez que $G$ é um; seja $H$ um de ordem menor.
+
+Nenhum grafo $G'$ como em (\ref{eq1.4.3}) pode ter ordem exatamente $2k$, uma vez que isto implicaria que $\|G'\| > \gamma k \geq 2k^2 > \binom{|G'|}{2}$. A minimalidade de $H$ portanto implica que $\delta(H) > \gamma$: caso contrário poderíamos deletar um vértice de grau no máximo $\gamma$ e obtemos um grafo $G' \subseteq H$ ainda satisfazendo (\ref{eq1.4.3}). Em particular, temos $|H| \geq \gamma$. Dividindo a desigualdade $\|H\| > \gamma|H|- \gamma k$ de (\ref{eq1.4.3}) por $|H|$, resultará $\epsilon(H) > \gamma-k$, como desejado.
+
+Resta mostrar que $H$ é $(k+1)$-conexo. Se não, então $H$ tem uma separação própria $\{U_1,U_2\}$ de ordem no máximo $k$; seja $H[U_i] =: H_i$. Uma vez que qualquer vpertice $v\in U_1\setminus U_2$ tem todos os ses $d(v\geq\delta(H)>\gamma$ vizinhos de $H$ em $H_1$, temos $|H_1|\geq\gamma\geq 2k$. Similarmente, $|H_2|\geq 2k$. Como pela minimalidade de $H$, nem $H_1$ nem $H_2$ satisfazem (\ref{eq1.4.3}), ainda temos
+\begin{equation*}
+    \|H_i\| \leq \gamma(|H_i|-k)
+\end{equation*}
+para $i=1,2$. Mas então
+\begin{eqnarray*}
+    \|H\|   & \leq  & \|H_1\| + \|H_2\| \\
+            & \leq  & \gamma(|H_1|+|H_2|-2k) \\
+            & \leq  & \gamma(|H|-k)\;\;\text{(como $|H_1 \cap H_2| \leq k$),}
+\end{eqnarray*}
+o que contradiz (\ref{eq1.4.3}) para $H$.
+\end{proof}
+\end{teorema}
+
+\section{Árvores e florestas}
+
+\begin{definicao}[Árvore e florestas] Um grafo \emph{acíclico}, um que não contém qulquer ciclo, é chamado de \emph{floresta}. Uma floresta conexa é chamado de \emph{árvore}.
+\end{definicao}
+
+\begin{teorema}\label{th1.5.1}
+    As seguintes afirmações são equivalentes para um grafo $T$:
+    \begin{enumerate}
+        \item[(i)] $T$ é uma árvore;
+        \item[(ii)] Qualquer dois vértices de $T$ são ligados por um único caminho em $T$;
+        \item[(iii)] $T$ é minimamente conexo, i.e., $T$ é conexo, mas $T-e$ é disconexo para qualquer aresta $e\in E(T)$;
+        \item[(iv)] $T$ é maximamente conexo, i.e., $T$ não contém ciclos, mas $T+xy$ contém, para qualquer dois vértices não-adjacentes $x,y\in V(T)$.
+    \end{enumerate}
+\begin{proof} $(i \Rightarrow ii)$ Suponha que algum par de vértice distintos $u$ e $v$ de $T$ sejam ligados por dois caminhos distintos $P_1:=x_0x_1\ldots x_k$ e $P_2:=y_0y_1\ldots y_l$, onde $x_0=y_0=u$ e $x_k=y_l=v$. Seja $z_1$ um vértice tal que $z_1=x_i=y_i$, para o menor $i$ possível, e tal que $x_{i+1}$ e $y_{i+1}$ são distintos; e seja $z_2$ um vértice tal que $z_2=x_i=y_j$, para o menor $i$ e $j$ possível, e tal que $x_{i-1}$ e $y_{j-1}$ são distintos (tanto $z_1$ quanto $z_2$ deverão existir, pois $P_1$ e $P_2$ são caminhos não triviais e distintos). Afirmo que $C:=z_1x_ix_{i+1}\ldots z_2y_jy_{j-1}\ldots z_1$ é um ciclo. De fato, pela definição de $z_1$ e $z_2$, nenhum vértice em $C-z_1-z_2$ deverão ser iguais. Mas isso contradiz o fato de $T$ ser uma árvore.
+
+$(ii \Rightarrow iii)$ Suponha que em $T$, qualquer dois vértices são ligados por um único caminho e que $T$ não seja minimamente conexo, i.e., $T-e$ é conexo para alguma aresta $e\in T$. Sejam $u,v\in V(T)$ os dois vértices incidentes com $e$. Sobre $T$, o caminho trivial $P=e$ conecta $u$ a $v$, mas sobre $T-e$ outro caminho os conectam, mas isso contradiz a hipótese de exixstir um único caminho que conecta qualquer dois vértices de $T$.
+
+$(iii \Rightarrow iv)$ Seja $T$ um grafo minimamente conexo. $T$ não tem um ciclo, pois se tivesse um ciclo $C$ contradiria a hipótese de $T$ ser minimamente conexo, pois $T-e$, onde $e\in C$, é ainda um grafo conexo. Agora se adicionarmos a $T$ uma aresta $e:=xy$, para algum par de vértices de $T$ não-adjacentes, o novo grafo terá um ciclo: pela conexidade de $T$, existe um caminho $xPy$ em $T$ que liga $x$ a $y$ e tal caminho completa um ciclo com $e$ em $T$, i.e., $P + e$ é um ciclo em $T$.
+
+$(iv \Rightarrow i)$ Basta mostrar que $T$ é conexo. Ora, se ao adicionarmos uma aresta $e:=xy$ a $T$, para qualquer pares de vértices não adjacentes $x,y\in V(T)$, criamos um ciclo $C$, o qual claramente contém $xy$, então o caminho $P:=C-e$, o qual está em $T$, liga tais vértices $x$ e $y$.
+
+\end{proof}
+\end{teorema}
+
+\begin{corolario}\label{co1.5.2}
+    Os vértices de uma árvore podem sempre ser enumerados, digamos $v_1,\ldots,v_n$, de tal forma que todos os vértices $v_i$ com $i\geq 2$ têm um único vizinho em $\{v_1,\ldots,v_{i-1}\}$.
+\begin{proof} Use a enumeração da Proposição \ref{pr1.4.1}.
+\end{proof}
+\end{corolario}
+
+\begin{corolario}
+    Um grafo conexo com $n$ vértices é uma árvore se, e somente se, ele contém $n-1$ arestas.
+\begin{proof} $(\Rightarrow)$ Seja $T$ uma árvore com $n$ vértices. Por indução, suponha que a afirmação seja verdadeira para $i<n$. Claramente, é verdadeiro para $T = K^1$. Seja $v\in V(T)$ um vértice qualquer de $T$. Considere o grafo $T-v$. O grafo resultante contém $d(v)$ componentes conexas os quais denotaremos por $T_i$, para $i=1,\ldots,d(v)$. Sendo $T_i$ subgrafos de $T$ e pela caracterização de uma árvore dada pela parte $(ii)$ do Teorema \ref{th1.5.1}, temos que $T_i$ são árvores. Logo, pela hipótese de indução, $T_i$ possue $n_i - 1$ arestas, onde $n_i:=|T_i|$, pois $n_i<n$. Agora reconstruímos $T$ a partir dos $T_i$ e do vértice $v$ retirado. Desta forma, temos
+\begin{equation*}
+    ||T|| = \sum_{i=1}^{d(v) }||T_i|| + d(v) = \sum_{i=1}^{d(v)} (n_i-1) + d(v) = \sum_{i}^{d(v)} n_i = n-1
+\end{equation*}
+
+$(\Leftarrow)$ Seja $T$ qualquer grafo conexo com $n$ vértice e $n-1$ arestas. Seja $T'$ uma árvores geradora em $T$. Pela a primeira implicação do teorema, $T'$ tem $n-1$ arestas, pois $T'$ é uma árvore com $n$ vértices. Segue que $T=T'$.
+\end{proof}
+\end{corolario}
+
+\begin{corolario}
+    Se $T$ é uma árvore e $G$ é qualquer grafo com $\delta(G) \geq |T|-1$, então $T\subseteq G$, i.e.,$G$ tem um subgrafo isomorfo a $T$.
+\begin{proof} Claramente, a afirmação é verdadeira para $T = K^1$. Seguindo a enumeração do Corolário \ref{co1.5.2}, seja $T_i:=T_{i-1}+v_i$, tal que $T_k = T$, onde $k=|T|$. Suponha que a afirmação seja verdadeira para $i<k$, i.e., existe uma cópia de $T_i$, para $i=1,\ldots,k-1$. Agora, sobre a cópia de $T_{k-1}$, escolhemos um vértice em $N(v_{k-1})-T_{k-1}$ para ser $v_k$. A única coisa que impossibilitaria a escolha de $v_k$ seria a situação em que todos os vizinhos de de $v_{k-1}$ estivessem sobre $T_{k-2}$, mas isso não irá acontecer, já que $\delta(G) \geq k-1$ e $|T_{k-2}| = k-2$, restando pelo menos um vizinho de $v_{k-1}$ em $G-T_{k-1}$ para ser $v_k$.
+\end{proof}
+\end{corolario}
+
+
+\section{Grafos bipartidos}
+
+\begin{proposicao}
+    Um grafo é bipartido se, e somente se, ele não contém ciclos ímpares.
+\begin{proof}
+$(\Rightarrow)$ Seja $G$ um grafo bipartido o qual contém um ciclo $C:=x_1\ldots x_kx_1$ de tamanho ímpar. Seja $\{A,B\}$ uma bipartição de $V(G)$. Sem perca de generalidade, assuma que $x_1$ pertença a $A$. Indutivamente, mostra-se que $x_2\in B$, $x_3\in A$, $x_4\in B$, e assim por diante. Ou seja, os vértices $x_i$, para $i$ ímpar, estão em $A$, e para $i$ par, estão em $B$. Como $k$ é ímpar, pois o $C$ é ímpar, $x_k\in A$. Mas $x_kx_1$ é uma aresta de $G$, contradizendo o fato de $G$ ser bipartido, pois tanto $x_1$ quanto $x_k$ residem em $A$.
+
+$(\Leftarrow)$ Seja $G$ um grafo sem ciclos ímpares; mostremos que $G$ é bipartido. Claramente, um grafo é bipartido se todas as suas componentes são bipartidas ou triviais, então podemos assumir que $G$ é conexo. Seja $v$ um vértice qualquer em $G$. Defina
+$$
+   X = \{ x\in V(G) \;|\; d(x,v) \text{ é par} \} \quad \text{ e } \quad Y = \{ y \in V(G) \;|\; d(y,v) \text{ é ímpar} \}
+$$
+Uma vez que $G$ é conexo, $V(G) = X\cup Y$. Também, pela definição de distância, $X \cap Y= \emptyset $.
+
+Seja $u,w\in G$ ambos em $X$ ou ambos em $Y$. Mostremos que $u$ e $w$ não são adjacentes. Seja $P$ e $Q$ caminhos curtos que liguem $v$ a $u$ e $w$, respectivamente. Seja $x\in P\cap Q$, tal que $d(x,v)$ é máxima. Considere os caminhos $P_1\subseteq P$ e $Q_1\subseteq Q$ os quais ambos ligam $v$ a $x$. Como $P$ e $Q$ são caminhos curtos, $P_1$ e $Q_1$ também deverão ser. Consequentemente, $|P_1|=|Q_1|$.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=5cm]{figuras/fig_1_6_3b}
+  \caption{Os caminhos $P_1$, $P_2$, $Q_1$ e $Q_2$.}\label{fig_1_6_3b}
+\end{figure}
+
+Sejam $P_2:=P-P_1$ um caminho que conecta $x$ a $u$ e $Q_2:=Q-Q_1$ um caminho que conecta $x$ a $w$ (Figura \ref{fig_1_6_3b}). Temos que esses caminhos possuem somente o vértice $x$ em comum, i.e., $P_1 \cap P_2 = x$. Por construção, $|P_2|$ e $|Q_2|$ possuem a mesma paridade, logo a soma $|P_2|+|Q_2|$ é par, i.e., o caminho $uP_2xQ_2w$ é par, então $uw\notin E(G)$ por suposição, pois caso contrário, teríamos um ciclo ímpar em $G$. Desta forma, $X$ e $Y$ biparticionam $G$, como afirmado.
+\end{proof}
+\end{proposicao}
+
+\section{Trilhas Eulerianas}
+
+\begin{definicao}[Trilha Euleriana e Grafo Euleriano] Um passeio fechado em um grafo é uma \emph{trilha Euleriana} se ela passa por todas as arestas do grafo exatamente uma vez. Um grafo é \emph{Euleriano} se ele admite uma trilha Euleriana.
+\end{definicao}
+
+
+\begin{teorema}[Euler 1736]\label{th1.8.1}
+    Um grafo conexo é Euleriano se, e somente se, todo vértice possue grau par.
+\begin{proof} A condição sobre o grau é claramente necessária: um vértice aparecendo $k$ vezes em uma trilha Euleriana (ou $k+1$ vezes, se ele é o vértice inicial e o final, e em tal caso o contamos duas vezes) deverá ter grau $2k$.
+
+Reciprocamente, seja $G$ um grafo conexo tal que todos os seus vértices possuem grau par, e seja
+\begin{equation*}
+    W = v_0e_0\ldots e_{l-1}v_{l}
+\end{equation*}
+o maior passeio em $G$ usando nenhuma aresta mais do que uma vez. Visto que $W$ não pode ser extendido, ele já contém todas as arestas ligadas a $v_l$.
+Por hipótese, o número de tais arestas é par.
+Uma vez que $v_l=v_0$, então $W$ é um passeio fechado.
+
+Suponha que $W$ não é uma trilha Euleriana. Então $G$ tem uma aresta $e$ fora de $W$ mas incidente com um vértice de $W$, digamos $e=uv_i$ (aqui usamos a conexidade de $G$). Então o passeio
+\begin{equation*}
+    u e v_i e_i \ldots e_{l-1} v_l e_0 \ldots e_{i-1} v_i
+\end{equation*}
+é maior do que $W$, uma contradição.
+\end{proof}
+\end{teorema}
+
+Vejamos agora um outro fato similar o qual foi primeiro notado por Veblen em 1912:
+
+\begin{teorema}[Veblen 1912]
+    O conjunto das arestas de um grafo pode ser particionado em ciclos se, e somente se, todo vértice possue grau par.
+\begin{proof} A condição é claramente necessária, uma vez que se um grafo é união dijunta de alguns ciclos de arestas e vértices isolados, então um vértice contido em $k$ ciclos tem grau $2k$.
+
+Suponha que todo vértice de um grafo $G$ possue grau par e  $|G|>0$. Como podemos encontrar um ciclo isolado em $G$? Seja $x_0x_1\ldots x_l$ um caminho de tamanho maximal $l$ em $G$. Uma vez que $x_0x_1\in E(G)$, temos $d(x_0)\geq 2$. Mas entao $x_0$ tem outro vizinho $y$ em adição a $x_1$; além disso, podemos ter $y=x_i$, para algum $i$, $2\leq i \leq l$, caso o contrário $yx_0x_1\ldots x_l$ deverá ser um caminho de tamanho $l+1$. Assim encontramos nosso ciclo: $x_0x_1\ldots x_i$.
+
+Tendo encontrado um ciclo, digamos $C_1$, tudo que deve ser feito é repetir o processo diversas vezes. Para fomralizar isto, seja $G_1:=G$, tal que $C_1$ é um ciclo em $G_1$ e defina $G_2:=G_1-E(C_1)$. Todo vértice de $G_2$ terá grau par, então ou $E(G_2)=\emptyset$ ou senão $G_2$ contém um ciclo $C_2$. Continuando o processo desta forma, encontramos ciclos disjuntos $C_1,C_2,\ldots,C_s$ tais que $E(G) = \bigcup_{i=1}^{s} E(C_i)$.
+\end{proof}
+\end{teorema}
+
+
+\section{Emparelhamento em grafos bipartido}
+
+\begin{teorema}[König 1931]
+    A cardinalidade máxima de um emparelhamento em um grafo bipartido $G$ é igual à mínima cardinalidade de uma cobertura dos vértices de suas arestas.
+\begin{proof} Seja $M$ um emparelhamento em $G$ de cardinalidade máxima. De todas as arestas em $M$, vamos escolher uma de suas extremidades: sua extremidade em $B$ se algum caminho altertante termina neste vértice, e sua extremidade em A, caso o contrário (Figura \ref{fig_2_1_2}). Iremos provar que o conjunto $U$ desses $|M|$ vértices cobrem $E$; uma vez que qualquer vértice cobertor de $E$ deve cobrir $M$, não pode haver nenhum com menos do que $|M|$ vértices, e então o teorema seguirá.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=4cm]{figuras/fig_2_1_2}
+  \caption{O vértice cobertor $U$.}\label{fig_2_1_2}
+\end{figure}
+
+Seja $ab\in E$ uma aresta; mostremos que ou $a$ ou $b$ residem em $U$. Se $ab\in M$, isto seguirá pela definição de $U$, então assuminos que $ab\notin M$. Uma vez que $M$ é um emparelhamento maximal, ele contém uma aresta $a'b'$ com $a=a'$ ou $b=b'$. De fato, podemos assumir que $a=a'$: caso $a$ não seja emparelhável (e portanto $b=b'$), então $ab$ é um caminho alternante e assim a extremidade de $a'b'\in M$ escolhida para $U$ foi o vértice $b'=b$. Agora se $a'=a$ não está em $U$, então $b'\in U$, e algum caminho alternante $P$ termina em $b'$. Mas então existe também um caminho alternante $P'$ terminando em $b$: ou $P':=Pb$ (se $b\in P$) ou $P':=Pb'a'b$. Pela maximalidade de $M$, contudo, $P'$ não é um caminho de aumento. Então $b$ deve ser emparelhável, e foi escolhido para $U$ a partir da aresta de $M$ contendo-lhe.
+\end{proof}
+\end{teorema}
+
+\begin{teorema}[Hall 1935]\label{th2.1.2}
+    O grafo bipartido $G$ contém um emparelhamento de $A$ se, e somente se,
+    \begin{equation}\label{marriage}
+        |N(S)| \geq |S|,\quad \forall S\subseteq A.
+    \end{equation}
+\end{teorema}
+
+Iremos dá três provas, uma primeira natural e algorítmica, uma segunda indutiva e uma terceira elegante.
+
+\begin{proof}[\emph{\textbf{Primeira prova}}] Considere um emparelhamento $M$ de $G$ que deixa um vértice de $A$ não emparelhado; iremos construir um caminho de aumento com respeito a $M$.
+
+Seja $a_0,b_1,a_1,b_2,a_2,\ldots$ uma sequência maximal de vértices distintos $a_i\in A$ e $b_i\in B$ satisfazendo as seguintes condições para todo $i\geq1$ (Figura \ref{fig_2_1_3}):
+
+\begin{enumerate}
+    \item[(i)] $a_0$ é não emparelhado;
+    \item[(ii)] $b_i$ é adjacente a algum vértice $a_{f(i)}\in\{a_0,\ldots,a_{i-1}\}$;
+    \item[(iii)] $a_i b_i \in M$.
+\end{enumerate}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=2cm]{figuras/fig_2_1_3}
+  \caption{O vértice cobertor $U$.}\label{fig_2_1_3}
+\end{figure}
+
+Pela condição de casamento (\ref{marriage}), nossa sequência não pode terminar em um vértice de $A$: os $i$ vértices $a_0,\ldots,a_{i-1}$ juntos possuem pelo menos $i$ vizinhos em $B$, então podemos sempre encontrar um novo vértice $b_i\neq b_1,\ldots,b_{i-1}$ que satisfaz (ii). Seja $b_k\in B$ o último vértice da sequência. Por (i)--(iii),
+$$
+    P:=b_k a_{f(k)} b_{f(k)} a_{f^2(k)} b_{f^2(k)} a_{f^3(k)} \cdots a_{f^r(k)}
+$$
+com $f^r(k)=0$, é um caminho alternante.
+
+O que é que nos impede de extender nossa sequência um pouco mais? Se $b_k$ é emparelhado, digamos a $a$, podemos de fato extendê-la fazendo $a_k:=a$, a menos que $a=a_i$, com $0 <i < k$, neste caso (iii) deverá implicar $b_k=b_i$ com uma contradição. Então $b_k$ é não emparelhado, e portanto $P$ é um caminho de aumento entre $a_0$ e $b_k$.
+\end{proof}
+
+\begin{proof}[\emph{\textbf{Segunda prova}}] Aplicamos indução sobre $|A|$. Para $|A|=1$ a afirmação é verdadeira. Agora seja $|A|\geq 2$, e assuma que a condição de casamento (\ref{marriage}) é suficiente para a existência de um emparelhamento de $A$ quando $|A|$ é pequeno.
+
+Se $|N(S)|\geq |S|+1$ para todo conjunto $S\subsetneqq A$, nós pegamos uma aresta $ab\in G$ e consideramos o grafo $G':=G-\{a,b\}$. Então todo conjunto não vazio $S\subseteq A\setminus\{a\}$ satisfaz
+$$
+    |N_{G'}(S)| \geq |N_{G}(S)|-1 \geq |S|,
+$$
+então pela hipótese de indução $G'$ contém um emparelhamento de $A \setminus \{a\}$. Junto com a aresta $ab$, irão produzir um emparelhamento de $A$ em $G$.
+
+Suponha agora que $A$ tem um subconjunto próprio não-vazio $A'$ com $|B'|=|A'|$ para $B':=N(A')$. Pela hipótese de indução, $G':=G[A'\cup B']$ contém um emparelhamento de $A'$. Mas $G-G'$ satisfazendo a condição de casamento (\ref{marriage}) também: para qualquer conjunto $S\subseteq A \setminus A'$ com $|N_{G-G'}(S)| < |S|$ deverá ter $|N_{G}(S \cup A')| < |S\cup A'|$, contrariando a nossa suposição. Novamente, pela indução, $G-G'$ contém um emparelhamento de $A\setminus A'$. Juntando os dois emparelhamentos, obtemos um emparelhamento de $A$ em $G$.
+\end{proof}
+
+\begin{proof}[\emph{\textbf{Terceira prova}}] Para a nossa terceira prova, consideremos $H$ como um subgrafo de $G$ satisfazendo a condição de casamento (\ref{marriage}) e sendo aresta-minimal em relação a esta propriedade. Note que $d_{H}(a)\geq1$ para todo $a\in A$, pela condição de casamento com $S=\{a\}$. Mostremos que $d_{H}(a)=1$ para todo $a\in A$. As arestas de $H$ então formam um emparelhamento de $A$, uma vez que pela condição de casamento nenhum par de aresta pode compartilhar um vértice em $B$.
+
+Suponha que $a$ tenha vizinhos distintos $b_1,b_2$ em $H$. Pela definição de $H$, os grafos $H-ab_1$ e $H-ab_2$ violam a condição de casamento. Então para $i=1,2$ existe um conjunto $A_i\subseteq A$ contendo $a$ tal que $|A_i|>|B_i|$ para $B_i:=N_{H-ab_i}(A_i)$. Uma vez que $b_1\in B_2$ e $b_2\in B_1$, obtemos
+\begin{eqnarray*}
+    |N_{H}(A_1\cap A_2 \setminus \{a\})| & \leq & |B_1 \cap B_2| \\
+        & =     & |B_1| + |B_2| - |B_1 \cup B_2|\\
+        & =     & |B_1| + |B_2| - |N_{H}(A_1 \cup A_2)|\\
+        & \leq  & |A_1| - 1 + |A_2| - 1 - |A_1 \cup A_2|\\
+        & =     & |A_1\cap A_2\setminus\{a\}| - 1.
+\end{eqnarray*}
+Portanto $H$ viola a condição de casamento, contrariando a suposição.
+\end{proof}
+
+\begin{corolario}\label{cr2.1.3}
+    Se o grafo bipartido $G$ é $k$-regular com $k\geq 1$, então $G$ tem um 1-fator.
+\begin{proof} Se $G$ é $k$-regular, então claramente $|A|=|B|$; assim é suficiente mostrar pelo Teorema \ref{th2.1.2} que $G$ contém um emparelhamento de $A$. Agora todo conjunto $S \subseteq A$ é ligado a $N(S)$ pelo um total de $k|S|$ arestas, e estas se encontram entre as $k|N(S)|$ arestas de $G$ incidente com $N(S)$. Portanto $k|S|\leq k|N(S)|$, então $G$ deverá de fato satisfazer a condição de casamento (\ref{marriage}).
+\end{proof}
+\end{corolario}
+
+\begin{teorema}[Gale \& Shapley 1962]
+    Para todo conjunto de preferências, $G$ possue um emparelhamento estável.
+\end{teorema}
+
+\begin{corolario}[Petersen 1891]\label{cr2.1.5}
+    Todo grafo regular de grau par positivo possue um 2-fator.
+\begin{proof} Seja $G$ qualquer grafo $2k$-regular ($k\leq1$), sem perda de generalidade, conexo. Pelo Teorema de Euler, $G$ contém uma trilha Euleriana $v_0e_0\ldots e_{l-1}v_l$, com $v_l=v_0$. Trocamos todos os vértices $v$ por uma par $(v^{-},v^{+})$, e toda aresta $e_i=v_i v_{i+1}$ por uma aresta $v_i^{+} v_{i+1}^{-}$ (Figura \ref{fig_2_1_4}). O grafo bipartido resulttante $G'$ é $k$-regular, então pelo Corolário \ref{cr2.1.3} ele contém um 1-fator. Colapsando todos os pares de vértices $(v^{-},v^{+})$ de volta em um vértice único $v$, tornaremos este 1-fator de $G'$ em um 2-fator de $G$.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=6cm]{figuras/fig_2_1_4}
+  \caption{Divisão de vértices na prova do Corolário \ref{cr2.1.5}}\label{fig_2_1_4}
+\end{figure}
+
+\end{proof}
+\end{corolario}
+
+\section{Emparelhamento em grafos geral}
+
+\begin{teorema}[Tutte 1947]
+    Um grafo $G$ possue um 1-fator se, e somente se,
+    \begin{equation}\label{tutte}
+        q(G-S) \leq |S|,\quad \forall S\subseteq V(G).
+    \end{equation}
+
+\begin{proof}[\emph{\textbf{Primeira prova}}]
+    Seja $G=(V,E)$ uma grafo sem um 1-fator. Nossa tarefa é encontrar um \emph{mal conjunto} $S\subseteq V$, um que viole a condição de Tutte (\ref{tutte}).
+
+    Podemos assumir que $G$ é aresta-maximal sem um 1-fator. De fato, se $G'$ é obtido de $G$ por uma adição de arestas e $S\subseteq V$ é mal para $G'$, então $S$ também será mal para $G$: qualquer componente ímpar de $G'-S$ é a união de componentes de $G-S$ e uma delas deverá ser novamente ímpar.
+
+    Com o que $G$ se parece? Claramente, se $G$ contém um mal conjunto $S$, então, pela sua aresta-maximalidade e diante da imediata implicação do teorema,
+    \begin{quote}
+        todas as componentes de $G-S$ são completas e todo vértice $s\in S$ é adjacente a todos os vértices de $G-s$.(*)
+    \end{quote}
+    Mas também reciprocamente, se um conjunto $S\subseteq V$ satisfaz (*), então ou $S$ ou o conjunto vazio deverá ser mal: se $S$ não for mal, podemos juntar as componentes ímpares de $G-S$ disjuntas a $S$ e parear todos os vértices remanescentes -- a menos que $|G|$ seja ímpar, neste caso $\emptyset$ será mal.
+
+    Então é suficiente provar que $G$ possue um conjuto $S$ de vértices satisfazendo (*). Seja $S$ o conjunto de vértices que são adjcentes a todos os outros vértices. Se este conjunto não satisfizer (*), então alguma componente de $G-S$ terá vértices não-adjacentes, digamos $a$ e $a'$. Seja $a,b,c$ os primeiros três vértices sobre um $a-a'$ caminho curto nesta componente; então $ab,bc\in E$, mas $ac\notin E$. Uma vez que $b\notin S$, existe um vértice $d\in V$ tal que $bd\notin E$. Pela maximalidade de $G$, existe um emparelhamento $M_1$ de $V$ em $G+ac$ e um emparelhamento $M_2$ de $V$ em $G+bd$.
+
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=6cm]{figuras/fig_2_2_2}
+      \caption{Derivando uma contradição, se $S$ não satisfaz (*).}\label{fig_2_2_2}
+    \end{figure}
+
+    Seja $P=d\ldots v$ um caminho maximal em $G$ começando em $d$ com uma aresta de $M_1$ e contendo alternativamente arestas de $M_1$ e $M_2$ (Figura \ref{fig_2_2_2}). Se a última aresta de $P$ reside em $M_1$, então $v=b$, uma vez que caso contrário, poderemos continuar $P$. Vamos, então, definir $C:=P+bd$. Se a última aresta de $P$ reside em $M_2$, então pela maximalidade de $P$, a $M_1$-aresta em $v$ deve ser $ac$, então $v\in\{a,c\}$; então seja $C$ o ciclo $dPvbd$. Em cada caso, $C$ é uma ciclo par com todas as outras aretas em $M_2$ e cuja a única aresta que não está em $E$ é $bd$. Trocando em $M_2$ suas arestas sobre $C$ com as arestas de $C-M_2$, obtemos um emparelhamento de $V$ contido em $E$, uma contradição.
+\end{proof}
+
+\begin{proof}[\emph{\textbf{Segunda prova}}]
+    Seja $G$ um grafo o qual não possue um emparelhamento perfeito. Considere um emparelhamento máximo $M^{*}$ de $G$, e denote por $U$ o conjunto de vértices em $G$ não coberto por $M^{*}$. Prova-se que $G$ possue uma barreira, isto é, um subconjunto $B$ de $V$ tal que $q(G-B)-|B|=|U|$. Uma vez que $M^{*}$ não é perfeito, $|U|$ é não-nulo. Portanto
+    $$
+        q(G-B) = |B| + |U| \geq |B| + 1
+    $$
+    e a condição de Tutte falha para o conjunto $S:= B$.
+\end{proof}
+\end{teorema}
+
+\begin{corolario}[Petersen 1891]
+    Todo grafo cúbico sem pontes possue um 1-fator.
+
+\begin{proof}
+    Mostremos que qualquer grafo $G$ cúbico sem ponte satisfaz a condição de Tutte. Seja $S\subseteq V(G)$ dado, e considere uma componente ímpar $C$ de $G-S$. Uma vez que $G$ é cúbico, o grau (em $G$) de vértices em $C$ somam a um número ímpar, mas somente uma parte par desta soma vem das arestas de $C$. Então $G$ tem um número ímpar de $S-C$ arestas, e portanto tem pelo menos 3 tais arestas (uma vez que $G$ não tem ponte). O número total de arestas entre $S$ e $G-S$ assim é pelo menos $3q(G-S)$. Mas é também no máximo $3|S|$, porque $G$ é cúbico. Uma vez que  $q(G-S)\leq |S|$, como requerido.
+\end{proof}
+\end{corolario}
+
+\begin{definicao}[Fator-crítico]
+  Um grafo $G$ é dito \emph{fator-crítico} se $G\neq \emptyset$ e $G-v$ tem um 1-fator para todo vértice $v\in G$. Um fator crítico deverá ter ordem ímpar.
+\end{definicao}
+
+\begin{definicao}[Emparelhável]
+  Dado um grafo $G = (V,E)$, dizemos que um conjunto de vértices $S \subseteq V$ é \emph{emparelhável} a $\mathcal{C}_{G-S}$ se o grafo bipartido $G_{S}$, o qual decorre de $G$ contraindo as componentes $C \in \mathcal{C}_{G-S}$ a um único vértice e deletando todas as arestas dentro de $S$, contém um emparelhamento de $S$. Formalmente, $G_S$ é o grafo com conjunto de vértices $S\cup\mathcal{C}_{G-S}$ e com o conjunto de arestas $\{ sC \;|\; \exists c \in C: sc \in E\}$ (veja Figura \ref{fig_2_2_1}).
+
+  \begin{figure}[ht]
+      \centering
+      \includegraphics[width=9cm]{figuras/fig_2_2_1}
+      \caption{Construção de $G_S$.}\label{fig_2_2_1}
+  \end{figure}
+\end{definicao}
+
+\begin{teorema}\label{th2.2.3}
+    Todo grafo $G=(V,E)$ contém um conjunto de vértices $S$ com as seguintes duas propriedades:
+    \begin{enumerate}
+        \item[(i)]  $S$ é emparelhável a $\mathcal{C}_{G-S}$;
+        \item[(ii)] Toda componente de $G-S$ é um fator-crítico.
+    \end{enumerate}
+    Dado qualquer tal conjunto $S$, o grafo $G$ contém um 1-fator se, e somente se, $|S|=|\mathcal{C}_{G-S}|$.
+\end{teorema}
+
+Para qualquer grafo $G$ dado, a afirmação do Teorema de Tutte segue facilmente deste resultado. De fato, por (i) e (ii) nós temos $|S| \leq |\mathcal{C}_{G-S}| = q(G-S)$ (uma vez que os fatores-críticos têm ordem ímpar); portanto a condição de Tutte $q(G-S) \leq |S|$ implica $|S| = q(G-S) = |\mathcal{C}_{G-S}|$, e a existência de um 1-fator segue da última afirmação do teorema \ref{th2.2.3}.
+
+\begin{proof}[\emph{\textbf{Prova do Teorema \ref{th2.2.3}}}]
+    Note primiero que a última afirmação do teorema segue de uma vez das afirmações (i) e (ii): se $G$ tem um 1-fator, temos $q(G-S) \leq |S|$ e uma vez que $|S| = |\mathcal{C}_{G-S}|$ como descutido acima; reciprocamente se $|S| = |\mathcal{C}_{G-S}|$, então a existência de um 1-fator segue imediatamente de (i) e (ii).
+
+    Agora provemos a existência de um conjunto $S$ satisfaendo (i) e (ii), pela indução sobre $|G|$. Para $|G| = 0$ podemos pegar $S = \emptyset$. Agora seja $G = (V,E)$ dado com $|G|>0$ e assuma que afirmação se assegura para grafos com menos vértices.
+
+    Considere o conjunto $T\subseteq V$ para o qual a condição de Tutte falha da pior maneira possível, i.e., para o qual
+    \begin{equation*}
+      d(T) := d_{G}(T) := q(G-T) - |T|
+    \end{equation*}
+    é máximo, e seja $S$ tal conjunto $T$ de maior tamanho. Note que $d(S)\geq d(\emptyset) \geq 0$.
+
+    Primeiro mostramos que toda componente $C\in\mathcal{C}_{G-S} =: \mathcal{C}$ é ímpar. Se $|C|$ é par, pegue um vértice $c\in C$, e considere $T:=S\cup\{c\}$. Como $C-c$ possue ordem ímpar ele terá pelo menos uma componente ímpar, o qual também é uma componente de $G-T$. Portanto
+    \begin{equation*}
+      q(G-T) \geq q(G-S) + 1 \quad \text{enquanto} \quad |T| = |S| +1,
+    \end{equation*}
+    então $d(T) \geq d(S)$ contrariando a escolha de $S$.
+
+    No que segue, provemos a afirmação (ii), que todo $C \in \mathcal{C}$ é um fator-crítico. Suponha a existência de $C \in \mathcal{C}$ e $c \in C$ tal que $C':=C-c$ não possue um 1-fator. Pela hipótese de indução (e o fato que, como mostramos anteriormente, para $G$ fixo nosso teorema implica na condição de Tutte) existe um conjunto $S'\subseteq V(C')$ com
+    \begin{equation*}
+      q(C'-S') > |S'|.
+    \end{equation*}
+
+    Uma vez que $|C|$ é ímpar, os números $q(C'-S')$ e $|S'|$ são ou ambos pares ou ambos ímpares, então eles não podem diferir por exatamente uma unidade. Podemos portanto melhorar a desigualdade acima para
+    \begin{equation*}
+      q(C'-S') \geq |S'|+2,
+    \end{equation*}
+    resultando $d_{C'}(S')\geq 2$. Então para $T:=S\cup\{c\}\cup S'$ temos
+    \begin{equation*}
+      d(T) \geq d(S)-1-1 + d_{C'}(S') \geq d(S),
+    \end{equation*}
+    onde o primeiro `$-1$' vem da perda de $C$ como uma componente ímpar e o segundo vem da inclusão de $c$ no conjunto $T$. Como antes, isto contradiz a escolha de $S$.
+
+    Falta mostrar que $S$ é emparelhável a $\mathcal{C}_{G-S}$. Se não, então pelo teorema do casamento existe um conjunto $S'\subseteq S$ que envia aresta para menos do que $|S'|$ componentes em $\mathcal{C}$. Uma vez que outras componentes em $\mathcal{C}$ são também componentes de $G-(S\setminus S')$, o conjunto $T = S\setminus S'$ satisfaz $d(T)> d(S)$, contrariando a escolha de $S$.
+\end{proof}
+
+
+\section{Colorindo mapas e grafos planares}
+
+\begin{teorema}[Teorema das Quatro Cores]
+    Todo grafo planar é 4-colorável.
+\end{teorema}
+
+\begin{proposicao}[Teorema das Cinco Cores]
+    Todo grafo planar é 5-colorável.
+\end{proposicao}
+
+\begin{proposicao}[Grötzsch]
+    Todo grafo planar não contendo um triângulo é 3-colorável.
+\end{proposicao}
+
+\section{Colorindo vértices}
+
+\begin{proposicao}
+    Todo grafo $G$ com $m$ arestas satisfaz
+    \begin{equation}
+        \chi(G) \leq \frac{1}{2} + \sqrt{2m+\frac{1}{4}}.
+    \end{equation}
+    \begin{proof}
+        Seja $c$ uma coloração de vértices de $G$ com $k = \chi(G)$ cores. Então $G$ tem pelo menos uma aresta entre qualquer duas classes de cores. Se não, poderíamos usar a mesma cor para ambas as classes. Portanto, $m\geq \frac{1}{2} k(k-1)$. Resolvendo a desigualdade para $k$, obtemos a validade da afirmação.
+    \end{proof}
+\end{proposicao}
+
+\begin{proposicao}
+    Todo grafo $G$ satisfaz
+    \begin{equation}
+        \chi(G) \leq \mathrm{col}(G) = \max\{\; \delta(H) \;|\; H\subseteq G \;\} +1.
+    \end{equation}
+
+\end{proposicao}
+
+\begin{corolario}
+    Todo grafo $G$ tem um subgrafo de grau mínimo pelo menos $\chi(G)-1$.
+\end{corolario}
+
+\begin{teorema}[Brooks 1941]
+    Seja $G$ um grafo conexo. Se $G$ não é completo ou não é um ciclo ímpar, então
+    \begin{equation}
+      \chi(G) \leq \Delta(G).
+    \end{equation}
+
+    \begin{proof}
+      Vamos provar por indução em $|G|$. O caso em que $|G|\leq 2$ é trivial, pois $G$ será um caminho ou um ciclo. Podemos, portanto, assumir que $\Delta := \Delta(G) \geq 3$ e que a afirmação segue para grafos com ordem menores. Suponha que $\chi(G) > \Delta$.
+
+      Seja $v\in G$ um vértice e $H:=G-v$. Então $\chi(H) \leq \Delta$: pela a indução, toda componente $H'$ de $H$ satisfaz $\chi(H') \leq \Delta(H') \leq \Delta$, ao menos quando $H'$ é completo ou um ciclo; em tal caso, $\chi(H') = \Delta(H') + 1 \leq \Delta$, pois todo vértice de $H'$ tem grau máximo em $H'$ e um de tais vértice é também adjacente a $v$ em $G$.
+
+%      Agora a prova consite em desenvolver uma contradição baseada nas seguintes afimrações:
+
+      Uma vez que $H$ pode ser $\Delta$-colorizável, mas $G$ não, temos o seguinte:
+      \begin{enumerate}
+        \item[(1)] Toda $\Delta$-coloração de $H$ usa as cores $1,...,\Delta$ sobre os vizinhos de $v$; em particular, $d(v)=\Delta$.
+      \end{enumerate}
+
+      Dada qualquer $\Delta$-coloração de $H$, denotamos os vizinhos de $v$ coloridos $i$ por $v_i$, $i=1,...,\Delta$. Para todo $i\neq j$, denotamos $H_{i,j}$ o subgrafo de $H$ gerado por todos os vértices coloridos com $i$ ou com $j$.
+      \begin{enumerate}
+        \item[(2)] Para todo $i\neq j$, os vértices $v_i$ e $v_j$ residem em uma componente comum $C_{i,j}$ de $H_{i,j}$.
+      \end{enumerate}
+      Caso contrário, podemos trocar as cores $i$ e $j$ em uma destas componentes; então $v_i$ e $v_j$ poderão ser coloridos com a mesma cor, contrariando (1).
+
+      \begin{enumerate}
+        \item[(3)] $C_{i,j}$ é sempre um caminho $v_i$--$v_j$.
+      \end{enumerate}
+      De fato, seja $P$ um caminho $v_i$--$v_j$ em $C_{i,j}$. Como $d_{H}(v_i) \leq \Delta - 1$, os vizinhos de $v_i$ têm cores duas a duas distintas: caso contrário, podemos recolorir $v_i$, contrariando (1). Portanto o vizinho de $v_i$ sobre $P$ é seu único vizinho em $C_{i,j}$, e similarmente para $v_j$. Portanto se $C_{i,j} \neq P$, então $P$ tem um vértice interno com três vizinhos coloridos identicamente; seja $u$ o primeiro de tais vértices sobre $P$ (Figura \ref{fig_5_5_1}). Uma vez que no máximo $\Delta-2$ cores são usada sobre os vizinhos de $u$, podemos recolorir $u$. Mas isto torna $Pu^{\circ}$ uma componente de $H_{i,j}$, contrariando (2).
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=8cm]{figuras/fig_5_2_1}
+      \caption{A prova de (3) no Teorema de Brook.}\label{fig_5_5_1}
+    \end{figure}
+
+      \begin{enumerate}
+        \item[(4)] Para $i$, $j$ e $k$ distintos, os caminhos $C_{i,j}$ e $C_{j,k}$ intersectam somente em $v_i$.
+      \end{enumerate}
+      Pois se $v_i\neq u \in C_{i,j} \cap C_{i,k}$, então $u$ tem dois vizinhos coloridos com $j$ e dois coloridos com $k$, então podemos recolorir $u$. Nesta nova coloração, $v_i$ e $v_j$ residem em componentes diferentes de $H_{i,j}$, contrariando (2).
+
+      A prova do teorema agora segue facilmente. Se os vizinhos de $v$ são dois a dois adjacentes, então cada um já tem $\Delta$ vizinhos em $N(v) \cup \{ v \}$, então $G = G[N(v) \cup\{ v \}] = K^{\Delta +1}$. Como $G$ é completo, não há mais nada para mostrarmos. Podemos, portanto, assumir que $v_1 v_2 \notin G$, onde $v_1,...,v_\Delta$ derivam seus nomes de alguma $\Delta$-coloração $c$ de $H$. Seja $u\neq v_2$ os vizinhos de $v_1$ sobre o caminho $C_{1,2}$; então $c(u) = 2$. Trocando as cores de $1$ e $3$ em $C_{i,k}$, obtemos uma nova coloração $c'$ de $H$; sejam $v'_i$, $H'_{i,j}$, $C'_{i,j}$ etc. definidos com respeito a $c'$ de forma óbvia. Como um vizinho de $v_1 = v'_3$, nosso vértice $u$ agora reside em $C'_{2,3}$, uma vez que $c'(u) = c(u) = 2$. Por (4) para $c$, contudo, o caminho $v^{\circ}C_{1,2}$ retém sua coloração original, então $u\in v^{\circ}C_{1,2}\subseteq C'_{1,2}$. Portanto $u\in C'_{2,3} \cap C'_{1,2}$, contrariando (4) para $c'$.
+    \end{proof}
+\end{teorema}
+
+\begin{teorema}[Erdös 1959]
+    Para todo inteiro $k$ existe um grafo $G$ com cintura $g(G)>k$ e número cromático $\chi(G) >k$.
+\end{teorema}
+
+\begin{definicao}[$k$-construtíveis]
+  Para cada $k\in \mathbb{N}$ , definiremos a classe de grafos $k$-contrutíveis recursivamente como segue:
+  \begin{enumerate}
+    \item[(i)] $K^{k}$ é $k$-construtível.
+    \item[(ii)] Se $G$ é $k$-construtível e $x,y\in V(G)$ são não-adjacentes, então também $(G+xy)/xy$ é $k$-construtível.
+    \item[(iii)] Se $G_1,G_2$ são $k$-construtível e existem vértices $x,y_1,y_2$ tais ques $G_1\cap G_2 = \{x\}$ e $xy_1 \in E(G_1)$ e $xy_2 \in E(G_2)$, então também $(G_1 \cup G_2) - xy_1 - xy_2 + y_1y_2$ é $k$-construtível (Figura \ref{fig_5_5_2}).
+
+        \begin{figure}[ht]
+          \centering
+          \includegraphics[width=10cm]{figuras/fig_5_2_2}
+          \caption{A construção de Hajós \emph{(iii)}.}\label{fig_5_5_2}
+        \end{figure}
+
+  \end{enumerate}
+  \emph{Obs.:} Em \emph{(ii)}, $(G+xy)/xy:= (V',E')$, onde $V':= V\setminus\{x,y\}\cup\{v\}$, no qual $v\notin V(G)$, e $E':= E(G-x-y)\cup\{uv, u\in V(G); \; \{ux,uy\}\cap E(G) \neq \emptyset \}$. Em outras palavras, $(G+xy)/xy$ é obtido adicionando uma aresta entre os vértices $x$ e $y$ e contraindo tal aresta.
+\end{definicao}
+
+\begin{teorema}[Hajós 1961]
+  Seja $G$ um grafo e $k\in \mathbb{N}$. Então $\chi(G) \geq k$ se e somente se $G$ tem um subgrafo $k$-construtíveis.
+
+  \begin{proof}
+    \emph{$(\Leftarrow)$} É fácil checar que se um grafo $G$ é $k$-construtível, então $\chi(G)\geq k$: uma vez que $G$ deve ser indutivamente gerado por uma das três propriedades de grafos $k$-construtíveis, devemos apenas verificar que um grafo que satisfaz pelo menos uma destas propriedades tem $\chi(G)\geq k$. Para a propriedade \emph{(i)} não há o que fazer. Para \emph{(ii)}, suponha que $G':=(G+xy)/xy$ é tal que $\chi(G') < k$. Seja $v$ o vértice de $G'$ obtido de $G+xy$ a partir da contração de $xy$. Temos que $d(X),d(y) \leq d(v)$. Então podemos colorir $G$ com $\chi(G') < k$ cores.
+
+    Para a propriedade \emph{(iii)} suponha que $G' := (G_1 \cup G_2) - xy_1 - xy_2 + y_1y_2$ é tal que $\chi(G') < k$. Suponha que, em $G'$, a cor de $y_1$ é $1$, a de $y_2$ é $2$ e a de $x$ é qualquer valor, digamos $j$. Temos que $\chi(G_1),\chi(G_2)<k$. Podemos induzir uma coloração de $G$ a partir de $G'$ trocando mutuamente a cor $2$ pela cor $j$; isto é ainda uma coloração própria de $G'$, mas também é em $G$, pois $x$, que agora é vizinho de $y_1$, tem agora a cor $2$ e $y_2$, que não é mais vizinho de $y_1$, mas é vizinho de $x$, que tem a cor $2$ em $G$, tem agora a cor $j$: o pior que pode acontecer é que $j$ seja igual $2$, nesse caso ao invés de trocarmos mutuamente a cor $2$ por $j$, trocamos mutuamente $1$ por $j$ e façamos o mesmo reciocínio, só que agora não poderemos nos depararmos que tal pior caso, já que $j=2$.
+    
+    \emph{$(\Rightarrow)$} Seja $G$ um grafo com $\chi(G) \geq k$; mostremos que $G$ tem um subgrafo $k$-construtível. Suponha que não; então $k\geq 3$. Adicionando algumas arestas, se necessárias, tornamos $G$ aresta-maximal com a propriedade que nenhum de seus subgrafos é $k$-construtível. Agora $G$ não é um grafo $r$-partido completo para qualquer $r$: pois $\chi(G)\geq k$ implicará $r\geq k$, e $G$ conterá o grafo $k$-construtível $K^{k}$
+    
+    Uma vez que $G$ não é um grafo multipartido completo, não-adjacência não é uma relação de equivalência sobre $V(G)$. Então existem vértices $y_1,x,y_2$ tais que $y_1x,xy_2\notin E(G)$, mas $y_1y_2 \in E(G)$. Uma vez que $G$ é aresta-maximal sem um subgrafo $k$-constrútivel, cada aresta $xy_i$ residem em algum subgrafo $k$-construtível $H_i$ de $G+xy_i$ ($i=1,2$).
+    
+    Seja $H'_2$ uma cópia isomórfica de $H_2$ que contém $x$ e $H_2-H_1$, mas é, por outro lado, disjunta de $G$, junto com um ismorfismo $v \mapsto v'$ de $H_2$ para $H'_2$ que fixa $H_2\cap H'_2$ ponto a ponto. Então $H_1\cap H'_2 = \{x\}$, assim
+        \begin{equation*}
+            H:=(H_1\cup H'_2)-xy_1-xy'_2+y_1y'_2
+        \end{equation*}
+    é $k$-constrtível por (iii). Um vértice de cada vez, identificamos em $H$ cada vértice $v'\in H'_2 - G$ com seu parceiro $v$; uma vez que $vv'$ nuca é uma aresta de $H$, cada um dessas indentificações equivale a um passo de construção do tipo (ii). Eventualmente, obtemos o grafo
+        \begin{equation*}
+          (H_1\cup H_2)-xy_1-xy_2+y_1y_2 \subseteq G;
+        \end{equation*}
+    iste é o subgrafo $k$-construtível de $G$ desejado.
+  \end{proof}
+\end{teorema}
+
+\section{Colorindo arestas}
+
+\begin{proposicao}[König 1916]
+  Todo grafo bipartido $G$ satisfaz $\chi'(G) = \Delta(G)$.
+
+  \begin{proof}
+    Aplicamos indução sobre $\|G\|$. Para $\|G\| = 0$, a afirmação segue. Agora assumimos que $\|G\| \geq 1$, e que a afirmação segue para grafos com menos arestas. Seja $\Delta := \Delta(G)$, pegue uma aresta $xy\in G$, e escolha uma $\Delta$-aresta-coloração de $G-xy$, pela hipótese de indunção. Referimos-nos as arestas coloridas $\alpha$ como $\alpha$-arestas, etc.
+
+    Em $G-xy$, tanto $x$ quanto $y$ é incidente com no máximo $\Delta - 1$ arestas. Portanto existem $\alpha,\beta \in \{1,...,\Delta\}$ tais que $x$ não é incidente com uma $\alpha$-aresta e $y$ não é incidente com uma $\beta$-aresta. Se $\alpha = \beta$ , podemos colorir a aresta $xy$ com esta cor e está encerrado; então podemos assumir que $\alpha \neq \beta$, e que $x$ é incidente com uma $\beta$-aresta.
+
+    Extedemos esta aresta ao passeio $W$ a partir de $x$ cujas aresta são coloridas $\beta$ e $\alpha$ alternativamente. Uma vez que tal passeio não contém um vértice duas vezes (porquê nao?), $W$ existe e é um caminho. Contudo, $W$ não deve conter $y$: caso contrário, $W$ deverá terminar em $y$ sobre uma $\alpha$-aresta (pela escolha de $\beta$) e portanto tem tamanho par, então $W+xy$ deverá se um ciclo ímpar em $G$. Agora podemos recolorir todas as arestas sobre $W$, trocando $\alpha$ com $\beta$. Pela escolha de $\alpha$ e a maximalidade de $W$, aresta adjacentes de $G-xy$ são ainda coloridas diferentemente. Temos portanto encontrado uma $\Delta$-aresta-coloração de $G-xy$ na qual nem $x$ nem $y$ é incidente com uma $\beta$-aresta. Colorindo $xy$ com $\beta$, extedemos esta coloração para uma $\Delta$-aresta-coloração de $G$.
+    
+  \end{proof}
+\end{proposicao}
+
+\begin{proposicao}[Vizing 1964]
+  Todo grafo $G$ satisfaz
+  \begin{equation}
+    \Delta(G) \leq \chi'(G) \leq \Delta(G) +1.
+  \end{equation}
+  \begin{proof}
+    Provamos a segunda desigualda por indução em $\|G\|$. O caso $\|G\| = 0$ é trivial. Para o paço de indução, seja $G = (V,E)$ com $\Delta := \Delta(G) > 0$ um grafo dado e assuma que a afirmação seja verdadeira para grafos com menos arestas. Ao invés de ``$(\Delta +1)$-aresta-coloração", iremos apenas dizer ``coloração". Uma aresta colorida com $\alpha$ será chamadade de $\alpha$-aresta.
+    
+    Para toda aresta $e\in G$ existe uma coloração de $G-e$, pela hipótese de indução. Em tal coloração, as arestas em um dado vértice $v$ usa no máximo $d(v)\leq \Delta$ cores, então alguma cor $\beta\in\{1,...,\Delta+1\}$ está ausente em $v$. Para qualquer outra cor $\alpha$, existe um passeio maximal (possivelmente trivial) iniciando em $v$, cujas arestas são coloridas alternativamente $\alpha$ e $\beta$. Este passeio é um caminho; nós o chamamos  de $\alpha/\beta$-caminhos de $v$.
+    
+    Suponha que $G$ não tenha coloração. Então a seguinte afirmação segue:
+    \begin{enumerate}
+      \item[(1)] Dado $xy\in E$, e qualquer coloração de $G-xy$ no qual as cores $\alpha$ é ausente em $x$ e as cores $\beta$ é ausente em $y$, o $\alpha/\beta$-caminho partindo de $y$ e terminando em $x$.
+    \end{enumerate}
+    Caso contrário, poderemos trocar as cores $\alpha$ e $\beta$ ao longo deste caminho e colorimos $xy$ com $\alpha$, obtendo uma coloração de $G$ (contradição).
+    
+    Seja $xy_0\in G$ uma aresta. Por indução, $G_0:=G-xy_0$ tem uma coloração $c_0$. Seja $\alpha$ uma cor ausente em $x$ nesta coloração. Além disso, seja $y_0,y_1,...,y_k$ uma sequência maximal de vizinhos distintos de $x$ em $G$, tal que $c_o(xy_i)$ é ausente em $c_0$ em $y_{i-1}$ para cada $i=1,...,k$. Para cada um dos grafos $G_i:=G-xy_i$, definimos uma coloração $c_i$, sendo
+    \begin{enumerate}
+      \item[] $c_i(e):=\left\{
+                         \begin{array}{ll}
+                           c_0(xy_{j+1}), & \hbox{\text{para $e=xy_j$ com $j\in\{0,...,i-1\}$};} \\
+                           c_0(e), & \hbox{\text{caso contrário}.}
+                         \end{array}
+                       \right.$
+    \end{enumerate}
+note que em cada uma destas colorações as mesmas cores estão ausentes em $x$ como em $c_0$.
+
+Agora seja $\beta$ uma cor ausente em $y_k$ em $c_0$. Claramente, $\beta$ é ainda ausente em $y_k$ em $c_k$. Se $\beta$ for também ausentes em $x$, poderemos colorir $xy_k$ com $\beta$ e, portanto, extender $c_k$ para a coloração de $G$. Portanto, $x$ é incidente com um $\beta$-aresta (em qualquer coloração). Pela maximalidade de $k$, portanto, existe um $i\in\{1,...,k-1\}$ tal que
+\begin{enumerate}
+  \item[] 
+\begin{center}
+$c_0(xy_i) = \beta$.
+\end{center}
+\end{enumerate}
+
+        \begin{figure}[ht]
+          \centering
+          \includegraphics[width=6cm]{figuras/fig_5_3_1}
+          \caption{O $\alpha/\beta$-caminho $P$ em $G_k$.}\label{fig_5_3_1}
+        \end{figure}
+
+Seja $P$ o $\alpha/\beta$-caminho partindo de $y_k$ em $G_k$ (com respeito a $c_k$; Figura \ref{fig_5_3_1}). Por (1), $P$ termina em $x$, e ele faz isso sobre uma $\beta$-aresta, uma vez que $\alpha$ é ausente em $x$. Como $\beta = c_o(xy_i)$, isto é uma aresta $xy_{i-1}$. Em $c_0$, contudo, e portanto também em $c_{i-1}$, $\beta$ está ausente em $y_{i-1}$ (por (2) e pela escolha de $y_i$); seja $P'$ o $\alpha/\beta$-caminho partindo de $y{i-1}$ em $G_{i-1}$ (com respeito a $c_{i-1}$). Uma vez que $P'$ é unicamente determinado, ele inicia com $y_{i-1}Py_k$; note que as arestas de $Px^{\circ}$ são coloridas com a mesma em $c_{i-1}$ como em $c_{k}$. Mas em $c_0$, e portanto em $c{i-1}$, não existe uma $\beta$-aresta em $y_k$ (pela escolha de $\beta$). Portanto $P'$ termina em $y_k$, contradizendo (1).
+
+  \end{proof}
+\end{proposicao}
+
+
+\section{Pré-requisitos topológicos}
+
+\begin{teorema}[Teorema da Curva de Jordan para Polígonos]
+    Para todo polígon $P\subseteq \mathbb{R}^2$, o conjunto $\mathbb{R}^2 \setminus P$ tem exatamente duas regiões. Cada uma desses têm o polígono inteiro $P$ como sua fronteira.
+\end{teorema}
+
+\begin{lema}
+    Seja $P_1$, $P_2$, $P_3$ três arcos, entre as mesmas duas extremidades mas disjuntos além disso.
+    \begin{enumerate}
+        \item[(i)] $\mathbb{R}^2 \setminus (P_1 \cup P_2 \cup P_3)$ tem extamente três regiões, com frontteiras $P_1\cup P_2$, $P_2\cup P_3$ e $P_1\cup P_3$.
+        \item[(ii)] Se $P$ é um arco entre um ponto em $\mathrm{int}(P_1)$ e um ponto em $\mathrm{int}(P_3)$ cujo o interior reside na região de $\mathbb{R}^2\setminus(P_1\cup P_3)$ que contém $P_2$, então $\mathrm{int}(P)\cap \mathrm{int}(P_2) \neq \emptyset$.
+    \end{enumerate}
+\end{lema}
+
+\begin{lema} Seja $X_1, X_2 \subseteq R^2$ conjuntos disjuntos, cada um união finita de pontos e arcos, e seja $P$ um arco entre um ponto em $X_1$ e um em $X_2$ cujo interior $\mathrm{int}(P)$ reside em uma região $O$ de $\mathbb{R}^2\setminus (X_1\cup X_2)$. Então $O\setminus \mathrm{int}(P)$ é a região de $\mathbb{R}^2\setminus(X_1\cup P\cup X_2)$.
+\end{lema}
+
+\begin{teorema}
+    Seja $\varphi: C_1 \rightarrow C_2$ um homeomorfismo entre dois ciclos sobre $S^2$, seja $O_1$ a região de $C_1$, e seja $O_2$ a região $C_2$. Então $\varphi$ pode ser extendido a um homeomorfismo $C_1\cup O_1 \rightarrow C_2 \cup O_2$.
+\end{teorema}
+
+\section{Grafos plano}
+\begin{definicao}
+  Um \emph{grafo plano} é um par $(V,E)$ de conjuntos finitos com as seguintes propriedades:
+  \begin{enumerate}
+    \item[(i)] $V \subseteq \mathbb{R}^2$;
+    \item[(ii)] toda aresta é um arco entre dois vértices;
+    \item[(iii)] arestas diferentes possuem conjuntos diferentes de extremidades;
+    \item[(iv)] o interior de uma aresta não contém vértices e nenhum ponto de qualquer outra aresta.
+  \end{enumerate}
+\end{definicao}
+
+\begin{lema}
+  Sejam $G$ um grafo plano, $f\in F(G)$ uma face e $H\subseteq G$ um sugrafo.
+  \begin{enumerate}
+    \item[(i)] $H$ possue uma face $f'$ contendo $f$.
+    \item[(ii)] Se a fronteira de $f$ reside em $H$, então $f'=f$.
+  \end{enumerate}
+
+  \begin{proof}
+      (i) Claramente, os pontos em $f$ são equivalentes também em $\mathbb{R}^2\setminus H$; seja $f'$ a classe de equivalência de $\mathbb{R}^2\setminus H$ contendo-lhes.
+
+      (ii) Relembre da seção anterior que qualquer arco entre $f$ e $f'\setminus f$ encontra a fronteira $X$ de $f$. Se $f'\setminus f \neq \emptyset$, então existe um tal arco dentro de $f'$, cujos os pontos em $X$ não residem em $H$. Portanto $X\subseteq H$.
+  \end{proof}
+\end{lema}
+
+\begin{lema}
+    Seja $G$ um grafo plano e $e$ uma aresta de $G$.
+    \begin{enumerate}
+      \item[(i)] Se $X$ é a fronteira de uma face de $G$, então ou $e\subseteq X$ ou $X\cap \mathrm{int}(e) = \emptyset$
+      \item[(ii)] Se $e$ reside sobre um ciclo $C\subseteq G$, então $e$ reside sobre a fronteira de exatamente duas faces de $G$, e estas estão contidas em faces distintas de $C$.
+      \item[(iii)] Se $e$ reside sobre nenhum ciclo, então $e$ reside sobre a fronteira de exatamente uma face de $G$.
+    \end{enumerate}
+\end{lema}
+
+\begin{corolario}
+  A fronteira de uma face é sempre o conjunto de pontos de um subgrafo.
+\end{corolario}
+
+\begin{proposicao}
+  Um floresta plana tem exatamente uma face.
+\end{proposicao}
+
+\begin{lema}
+  Um grafo é um ciclo se, e somente se, ele possui duas faces diferentes com a mesma borda.
+\end{lema}
+
+\begin{proposicao}
+  Em uma grafo plano 2-conexo, toda face é delimitada por um ciclo.
+\end{proposicao}
+
+\begin{proposicao}
+  As faces delimitadoras em um grafo plano 3-conexo são precisamente seus ciclos induzidos não-separadores.
+\end{proposicao}
+
+\begin{definicao}
+  Um grafo plano $G$ é dito \emph{maximalmente plano}, ou somente \emph{maximal}, se não podemos adicionar um nova aresta para formar um grafo plano $G'\supsetneq G$ com $V(G')= V(G)$. Chamamos $G$ de \emph{triangulação plana} se toda face de $G$ (incluindo as faces externas) são delimitadas por um triângulo.
+\end{definicao}
+
+\begin{proposicao}
+    Um grafo plano de ordem pelo menos 3 é maximalmente plano se, e somente se, ele é uma triangulação plana.
+\end{proposicao}
+
+\begin{teorema}[Fórmula de Euler]
+  Seja $G$ um grafo conexo plano com $n$ vértices, $m$ arestas e $l$ faces. Então
+  \begin{equation}\label{euler}
+    n-m+l=2.
+  \end{equation}
+\end{teorema}
+
+\begin{corolario}
+  Um grafo plano com $n\geq 3$ vértices tem no máximo $3n-6$ arestas. Toda triangulação plana com $n$ vértices tem $3n-6$ arestas.
+\end{corolario}
+
+\begin{corolario}
+  Um grafo plano não contém $K^{5}$ nem $K_{3,3}$ como um menor topológico.
+\end{corolario}
+
+
+\section{Soluções dos Exercícios do Diestel}
+
+\begin{description}
+\item[1.] Qual é o número de aresta em $K^n$?
+\begin{proof}
+    Cada aresta de $K^n$ é formada escolhendo-se dois vértices de $V(K^n)$, portanto $|K^n|=\binom{n}{2}$.
+\end{proof}
+
+\item[2.] Seja $d\in\mathbb{N}$ e $V:=\{0,1\}^{d}$; portanto, $V$ é o conjunto de todas as sequências 0-1 de tamanho $d$. O grafo sobre $V$ no qual duas tais sequências formam uma aresta se, e somente se, elas diferem em exatamente uma posição é chamado \emph{cubo d-dimensional}($Q_d$. Determine o (a) grau médio, (b) o número de arestas, (c) o diâmetro, (d) a cintura e a (e) circunrefência deste grafo.
+\begin{proof}[\emph{\textbf{(a):}}]
+    Afirmo que $Q_d$ é $d$-regular. De fato, uma sequência $x\in\{0,1\}^{d}$ só é adjacente a $d$ outras sequências, pois só existem $d$ sequências que diferem em exatamente uma posição. Logo, $\delta(Q_d)=\Delta(Q_d)=d(Q_d)=d$.
+\end{proof}
+
+\begin{proof}[\emph{\textbf{(b):}}]
+    Sabemos que
+    \begin{equation}
+        \sum_{v\in V} d(v) = 2 |E|.
+    \end{equation}
+    Como o $Q_d$ é d-regular, o lado esquerdo da equação acima é igual a $d|V|$. Uma vez que $|V| = 2^d$, temos que $|E|=d2^{d-1}$.
+\end{proof}
+
+\begin{proof}[\emph{\textbf{(c):}}]
+    Observe que podemos determinar a distância entre dois vértices $x$ e $y$ em $G$ olhando apenas para as sequências que determinam tais vértice: a distância é o número de posições com valores distintos nas duas sequências. De fato, qualquer caminho $P:x\rightarrow y$ é formada por trocas sucessivas de valores de uma determinada posição da sequência $x$ até chegarmos a sequência $y$. O tamanho de $P$, portanto, será o número de tais trocas. O menor tamanho de $P$ deverá ser adistância de $x$ a $y$, e tal corresponde ao número mínimo de trocas. Uma vez que as sequências são binárias, o número mínimo de trocas é igual ao número de posições com valores distintos em $x$ e $y$. Daí, segue que o diâmetro, que é a maior distância em $Q_d$, é igual $d$, pois o maior números de posições com valores distintos em duas sequências é $d$.
+\end{proof}
+
+\begin{proof}[\emph{\textbf{(d):}}]
+    Mostremos primeiro que não existe um ciclo de tamanho igual a 3. 
+    Sejam $x,y,z \in V$, distintos, tais que $xy,yz,zx\in E$. Podemos de fato ter tal trio de vértices? Sendo $x$ e $y$ adjacentes, então $y$ difere de $x$ em uma posição, digamos $i$; sendo $y$ e $z$ adjacentes, então $z$ difere de $y$ em uma posição, digamos $j$; sendo $z$ e $x$ adjacentes, então $x$ difere de $z$ eu uma posição, digamos $k$. Como tratam-se de sequências distintas, $i\neq j$, caso contrário, $x$ seria igual $z$. Mas então, não pode $z$ ser adjacente de $y$, pois este difere de $x$ na posição $k$ e na posição $j$. Logo, não podemos ter um 3-ciclo em $Q_d$. Contudo, desde que $d\geq2$, podemos ter um 4-ciclo: seja $x,y,z,v$ vértices tais que $x$ difere de $y$ na posição $i$, $y$ difere de $z$ na posição $j\neq i$, $z$ difere de $v$ na posição $i$ e $v$ difere de $x$ na posição $j$. Logo, $g(Q_d)=4$ para $\geq 2$.
+            
+    %De fato, $G$ pode ser biparticionado da seguinte forma: seja $x$ uma sequência fixa e seja $B$ o conjunto das sequências $y$ que diferem de $x$ em exatamente duas posições, i.e., $d(x,y)=2$; seja $A$ o conjunto das demais sequências (incluindo $x$).
+\end{proof}
+
+\begin{proof}[\emph{\textbf{(e):}}]
+    Primeiro observamos com $Q_{d+1}$ pode ser construído a partir de $Q_{d}$. 
+    Seja $V_{i}:=V(Q_{i})$ e $E_{i}:=E(Q_{i})$, para qualquer $i$ natural.
+    Temos $V_{d+1} = V{d} \times \{0,1\}$ (verificação imediata). $E_{d+1} = $.
+\end{proof}
+
+\end{description}
+
+
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+%   BIBLIOGRAFIA
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{diestel}   Diestel, R. \textit{Graph theory.} Graduate Texts in Mathematics, Third Ed., Springer-Verlag, 2005.
+
+\end{thebibliography}
+
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+%   FIM DO DOCUMENTO
+%--------------------------------------------------------------------------------------------------------------------------------------------------------
+\end{document}
